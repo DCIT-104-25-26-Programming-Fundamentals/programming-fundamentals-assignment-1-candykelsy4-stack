@@ -1,62 +1,92 @@
-# =============================================================================
-# PROGRAMMING FUNDAMENTALS — Assignment 4
-# Topic: Multi-dimensional Arrays (2D Lists), Nested Loops, and Functions
-# =============================================================================
-#
-# TASK: Matrix Operations
-#
-# Write a Python program that performs three operations on matrices (2D lists),
-# each implemented in its own function.
-#
-# -----------------------------------------------------------------------------
-# PART A — Transpose a Matrix
-# -----------------------------------------------------------------------------
-# - Read an M x N matrix from the user.
-# - Compute and display its transpose (rows become columns, columns become rows).
-#
-# Example (2 x 3 input):
-#
-#   Original Matrix:      Transposed Matrix:
-#   1  2  3               1  4
-#   4  5  6               2  5
-#                         3  6
-#
-# -----------------------------------------------------------------------------
-# PART B — Add Two Matrices
-# -----------------------------------------------------------------------------
-# - Read two matrices of exactly the same size (M x N).
-# - Compute their element-wise sum and display the result.
-#   (Each position in the result = the sum of the values at that position
-#    in both matrices.)
-#
-# -----------------------------------------------------------------------------
-# PART C — Multiply Two Matrices
-# -----------------------------------------------------------------------------
-# - Read matrix A of size M x N and matrix B of size N x P.
-#   (The number of COLUMNS in A must equal the number of ROWS in B.)
-# - Compute and display the matrix product A × B (result is M x P).
-#
-# -----------------------------------------------------------------------------
-# EXPECTED INPUT FORMAT
-# -----------------------------------------------------------------------------
-# When entering a row, the user types all values on one line separated by spaces:
-#
-#   Enter number of rows: 2
-#   Enter number of columns: 3
-#   Enter row 1: 1 2 3
-#   Enter row 2: 4 5 6
-#
-# -----------------------------------------------------------------------------
-# REQUIREMENTS
-# -----------------------------------------------------------------------------
-# - Use nested loops for all operations (no NumPy or other libraries).
-# - Each operation must be in its own function (see scaffold below).
-# - Display each matrix in a neat, aligned grid format.
-# - Tip: Complete Part A first, then Parts B and C.
-#
+def read_matrix(name, rows, cols):
+    matrix = []
+    print(f"Enter {name} ({rows}x{cols}):")
+    for i in range(rows):
+        while True:
+            row = list(map(int, input(f"  Enter row {i + 1}: ").split()))
+            if len(row) == cols:
+                matrix.append(row)
+                break
+            print(f"  Error: expected {cols} values, got {len(row)}. Try again.")
+    return matrix
 
-#
-# =============================================================================
-# YOUR CODE BELOW — remove the # symbols from the scaffold and fill it in
-# =============================================================================
+def print_matrix(matrix):
+    for row in matrix:
+        print("  " + "  ".join(f"{val:4}" for val in row))
 
+def transpose(matrix):
+    rows = len(matrix)
+    cols = len(matrix[0])
+    result = []
+    for j in range(cols):
+        new_row = []
+        for i in range(rows):
+            new_row.append(matrix[i][j])
+        result.append(new_row)
+    return result
+
+def add_matrices(a, b):
+    rows = len(a)
+    cols = len(a[0])
+    result = []
+    for i in range(rows):
+        new_row = []
+        for j in range(cols):
+            new_row.append(a[i][j] + b[i][j])
+        result.append(new_row)
+    return result
+
+def multiply_matrices(a, b):
+    m = len(a)
+    n = len(a[0])
+    p = len(b[0])
+    result = [[0] * p for _ in range(m)]
+    for i in range(m):
+        for j in range(p):
+            for k in range(n):
+                result[i][j] += a[i][k] * b[k][j]
+    return result
+
+def part_a():
+    print("\n--- PART A: Transpose ---")
+    rows = int(input("Enter number of rows: "))
+    cols = int(input("Enter number of columns: "))
+    matrix = read_matrix("Matrix", rows, cols)
+    print("\nOriginal Matrix:")
+    print_matrix(matrix)
+    print("\nTransposed Matrix:")
+    print_matrix(transpose(matrix))
+
+def part_b():
+    print("\n--- PART B: Add Two Matrices ---")
+    rows = int(input("Enter number of rows: "))
+    cols = int(input("Enter number of columns: "))
+    a = read_matrix("Matrix A", rows, cols)
+    b = read_matrix("Matrix B", rows, cols)
+    print("\nMatrix A:")
+    print_matrix(a)
+    print("\nMatrix B:")
+    print_matrix(b)
+    print("\nResult (A + B):")
+    print_matrix(add_matrices(a, b))
+
+def part_c():
+    print("\n--- PART C: Multiply Two Matrices ---")
+    m = int(input("Enter rows of Matrix A: "))
+    n = int(input("Enter columns of Matrix A (= rows of Matrix B): "))
+    p = int(input("Enter columns of Matrix B: "))
+    a = read_matrix("Matrix A", m, n)
+    b = read_matrix("Matrix B", n, p)
+    print("\nMatrix A:")
+    print_matrix(a)
+    print("\nMatrix B:")
+    print_matrix(b)
+    print("\nResult (A x B):")
+    print_matrix(multiply_matrices(a, b))
+
+def main():
+    part_a()
+    part_b()
+    part_c()
+
+main()
